@@ -47,3 +47,7 @@
 ## 0.3.7
 
 - added passthrough `meta` parameter to `mkNteDerivation`
+
+## 0.3.8
+
+- replaced `systems` input with hardcoded `lib.platforms.all`
