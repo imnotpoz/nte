@@ -3,11 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    systems.url = "github:nix-systems/default";
   };
 
-  outputs = { nixpkgs, systems, ... }: let
-    forEachSystem = nixpkgs.lib.genAttrs (import systems);
+  outputs = { nixpkgs, ... }: let
+    forEachSystem = nixpkgs.lib.genAttrs nixpkgs.lib.platforms.all;
     pkgsForEach = nixpkgs.legacyPackages;
     enginesForEach = import ./engine.nix;
     mkNteDerivationsForEach = import ./nte-drv.nix;
