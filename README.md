@@ -1,37 +1,48 @@
+<!-- markdownlint-disable MD033 -->
+<!-- markdownlint-disable MD041 -->
 <div align="center">
-    <img src="branding/nte-colors.svg" width="200" />
+    <img src="branding/nte-colors.svg" alt="nte logo" width="200" />
     <br />
     <h1>nte</h1>
 </div>
 
-nix template engine - takes some templates, entries and applies the templates to the entries
+nix template engine - takes some templates and entries,
+applies the templates to the entries
 
 nte's main repository is on [my forgejo](https://git.poz.pet/poz/nte) instance
 
-mirrors are available on [github](https://github.com/imnotpoz/nte) and [codeberg](https://codeberg.org/poz/nte), I accept contributions from anywhere
+mirrors are available on
+[github](https://github.com/imnotpoz/nte) and
+[codeberg](https://codeberg.org/poz/nte),
+I accept contributions from anywhere
 
 # sites written in nte
-https://poz.pet
 
-https://nixwebr.ing
+<https://poz.pet>
 
-https://mewoocat.github.io/
+<https://nixwebr.ing>
 
-if your site (or anything else) is written in nte, let me know and I'll add you to this list
+<https://mewoocat.github.io/>
+
+if your site (or anything else) is written in nte,
+let me know and I'll add you to this list
 
 you can also use this button on your site and link to one of the repos
 
-[<img src="branding/powered-by-nte.png">](https://git.poz.pet/poz/nte)
+[<img src="branding/powered-by-nte.png" alt="Powered by NTE">](https://git.poz.pet/poz/nte)
 
 # examples
 
 check `example/` for a static website written in nte
 
-build and run it using 
+build and run it using
+
 ```sh
-nix shell nixpkgs#darkhttpd --command sh -c "nix build -L .#examples.x86_64-linux.default && darkhttpd ./result"
+nix shell nixpkgs#darkhttpd \
+  --command sh -c "nix build -L .#examples.x86_64-linux.default && darkhttpd ./result"
 ```
-the site will be available at http://localhost:8080
+
+the site will be available at <http://localhost:8080>
 
 the example is a cut down version of my own website
 
@@ -50,27 +61,35 @@ nte = {
 ```
 
 then use the `mkNteDerivation` wrapper over `stdenv.mkDerivation` available under
+
 ```nix
 inputs.nte.functions.${system}.mkNteDerivation
 ```
+
 it accepts an attrset of:
+
 - `name`, `version`, `src` - passthrough to `stdenv.mkDerivation`
 - `extraArgs` - an attrset of additional arguments passed to all entries and templates
 - `entries` - a list of all entry files to be processed
 - `templates` - a list of all template files to be applied
 - `extraFiles` - a list of either:
-    - a string containing the path to the source file - will be copied to `$out` in the `installPhase`
-    - attrset of `source` and `destination`:
-        - `source` - a string containing a path, if relative `$PWD` is `$src` in the `installPhase`
-        - `destination` - a string containing a path, never absolute, appended to `$out` in the `installPhase`
+  - a string containing the path to the source file - will be copied to `$out`
+    in the `installPhase`
+  - attrset of `source` and `destination`:
+    - `source` - a string containing a path, if relative `$PWD` is `$src`
+      in the `installPhase`
+    - `destination` - a string containing a path, never absolute,
+      appended to `$out` in the `installPhase`
 - `preBuild` - passthrough to `stdenv.mkDerivation`
 - `postBuild` - passthrough to `stdenv.mkDerivation`
 - `preInstall` - passthrough to `stdenv.mkDerivation`
 - `postInstall` - passthrough to `stdenv.mkDerivation`
 
-make sure not to use nix paths in `extraFiles` if you want the names of the files to match up
+make sure not to use nix paths in `extraFiles`
+if you want the names of the files to match up
 
 example usage of the wrapper function:
+
 ```nix
 mkNteDerivation {
   name = "nte-example";
@@ -112,7 +131,10 @@ mkNteDerivation {
 
 nte will handle creating directories if your source file structure isn't flat
 
-if the `mkNteDerivation` wrapper isn't enough for you, you can do things the old way - by putting the output of `inputs.nte.functions.${system}.engine` in a derivation's `buildPhase`:
+if the `mkNteDerivation` wrapper isn't enough for you, you can do things
+the old way - by putting the output of `inputs.nte.functions.${system}.engine`
+in a derivation's `buildPhase`:
+
 ```nix
 mkDerivation {
   # ...
@@ -127,23 +149,29 @@ mkDerivation {
 }
 ```
 
-in that case if you wish to replicate the functionality of `extraFiles` you can use the derivation's `installPhase`, manually `mkdir` the needed directories and `cp` your files into `$out`
+in that case if you wish to replicate the functionality of `extraFiles`
+you can use the derivation's `installPhase`, manually `mkdir` the needed
+directories and `cp` your files into `$out`
 
 nte offers a standard library that contains:
+
 - `nixpkgs`
 - `getEntry` - a function that gives you access to the entry's attributes
-- `applyTemplate` - a function that allows you to manually apply a template to an entry
+- `applyTemplate` - a function that allows you
+  to manually apply a template to an entry
 - utility functions found in [stdlib.nix](./stdlib.nix)
 
 ## templates
 
-a template can take an arbitrary number of arguments and returns `{ name, format, output }`:
+a template can take an arbitrary number of arguments
+and returns `{ name, format, output }`:
 
 - `name` - used as a template ID for the entries
 - `format` - the extension of the output file (ignored if an entry defines `file`)
 - `output` - string if in a base template, entry to another template otherwise
 
 example template:
+
 ```nix
 {
   name,
@@ -164,6 +192,7 @@ example template:
 ```
 
 a template's output can also be an entry to another template:
+
 ```nix
 {
   name,
@@ -184,17 +213,25 @@ a template's output can also be an entry to another template:
   };
 }
 ```
-a template that's inherited from a different template also inherits its format - no need to define it again
+
+a template that's inherited from a different template
+also inherits its format - no need to define it again
 
 ## entries
 
-an entry can take an arbitrary number of arguments and returns `{ template, ... }`, the `...` being the desired template's arguments (sans `extraArgs`, those are passed either way)
+an entry can take an arbitrary number of arguments
+and returns `{ template, ... }`, the `...` being the desired template's
+arguments (sans `extraArgs`, those are passed either way)
 
-there's a built-in `passthrough` template, which (as the name might suggest) takes in a `format` and `output` and passes them through to the template with no changes
+there's a built-in `passthrough` template, which (as the name might suggest)
+takes in a `format` and `output` and passes them through
+to the template with no changes
 
-this is useful if you're using nte to create a single file - you won't have to create a boilerplate template
+this is useful if you're using nte to create a single file - you won't
+have to create a boilerplate template
 
 example entries (using the previous example templates):
+
 ```nix
 _: {
   template = "greeting";
@@ -202,11 +239,14 @@ _: {
   name = "Jacek";
   location = "Wrocław";
   info = ''
-    As of 2023, the official population of Wrocław is 674132 making it the third largest city in Poland.
+    As of 2023, the official population of Wrocław is 674132,
+    making it the third largest city in Poland.
   '';
 }
 ```
+
 an entry using the stdlib:
+
 ```nix
 {
   run,
@@ -220,7 +260,9 @@ an entry using the stdlib:
   time = run "date +%T";
 }
 ```
+
 if a binary isn't in `$PATH`, remember that each entry gets `pkgs`:
+
 ```nix
 {
   pkgs,
@@ -235,18 +277,24 @@ in {
 }
 ```
 
-nte by default will follow your source file structure, if you want to specify the output location yourself use `file`:
+nte by default will follow your source file structure,
+if you want to specify the output location yourself use `file`:
+
 ```nix
 _: {
   # ...
   file = "foo/bar.txt";
 }
 ```
-in this example the output of this entry will end up at `$out/foo/bar.txt` instead of the default location - a base template's `format` will also be ignored
+
+in this example the output of this entry will end up at `$out/foo/bar.txt`
+instead of the default location - a base template's `format` will also be ignored
 
 # thanks
 
-[raf](https://notashelf.dev/) for helping me out with some of the nix and setting up mirrors
+[raf](https://notashelf.dev/) for helping me out with some of the nix
+and setting up mirrors
 
 # license
+
 MIT
