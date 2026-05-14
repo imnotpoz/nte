@@ -1,24 +1,24 @@
 #metadata {
-    width: 90%;
-    margin: 2em auto 1em;
-    text-align: center;
+  width: 90%;
+  margin: 2em auto 1em;
+  text-align: center;
 }
 
 #less-metadata {
-    color: #555555;
-    margin: 1em auto 0em;
+  color: #555555;
+  margin: 1em auto 0em;
 }
 
 hr {
-    width: 75%;
-    margin: 1em auto 1em;
+  width: 75%;
+  margin: 1em auto 1em;
 }
 
 #content {
-    max-width: 80ch;
-    padding-bottom: 2em;
+  max-width: 80ch;
+  padding-bottom: 2em;
 }
 
 p {
-    margin: 1em auto 1em;
+  margin: 1em auto 1em;
 }
