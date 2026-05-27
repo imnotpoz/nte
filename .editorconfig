@@ -1,6 +1,0 @@
-[*.{css,md,nix}]
-max_line_length = 79
-indent_style = space
-charset = utf-8
-trim_trailing_whitespace = true
-indent_size = 2
